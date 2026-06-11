@@ -60,6 +60,14 @@ formulario.addEventListener('submit', function(evento) {
 
     console.log("¡Bitácora Global Guardada con éxito!", window.gameState);
 
+
+    // Invocamos la función que escribimos en tablero.js. 
+    // Como está en el scope global del navegador, menu.js puede usarla libremente
+    const cartasDeLaPartida = inicializarCartas();
+
+    // Le pasamos las cartas recién mezcladas al constructor visual
+    renderizarTablero(cartasDeLaPartida);
+
     // Intercambio de pantallas (Técnica SPA)
     pantallaMenu.style.display = 'none';
     pantallaJuego.style.display = 'block';
