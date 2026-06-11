@@ -89,8 +89,8 @@ function renderizarTablero(cartas) {
 
         // 3. ¡EL ESCUCHADOR DE CLICS!: Le asignamos vida e interacción a la carta
         divCarta.addEventListener('click', function() {
-            console.log(`Se hizo clic en la carta con ID: ${carta.id} en la posición: ${indice}`);
-            // Aquí llamaremos más adelante a la función para voltear la carta
+            // Le pasamos el div físico (this) y los datos de la carta actual
+            voltearCarta(this, carta);
         });
 
         // 4. Inyectamos la carta recién fabricada dentro de la caja madre en el HTML
@@ -98,4 +98,79 @@ function renderizarTablero(cartas) {
     });
 
     console.log(`¡Tablero visual renderizado con éxito para el modo ${dificultad}!`);
+}
+
+
+
+// 4. CONTROL DE CLICS Y LÓGICA DE VOLTEO
+
+function voltearCarta(elementoHtml, cartaObjeto) {
+    const estado = window.gameState;
+
+    // A. VALIDACIONES DE SEGURIDAD (Antitrampas)
+    // 1. Si el tablero está bloqueado por validación activa, ignorar clic.
+    // 2. Si la carta ya está volteada o ya fue encontrada, ignorar clic.
+    if (estado.tableroBloqueado) return;
+    if (elementoHtml.classList.contains('volteada')) return;
+
+    // B. VOLTEO VISUAL TEMPORAL
+    // Le agregamos la clase que el CSS usará para rotar la carta 180 grados
+    elementoHtml.classList.contains('volteada'); 
+    elementoHtml.classList.add('volteada');
+
+    // C. REGISTRAR EN MEMORIA
+    // Guardamos un objeto con la información física y lógica de la carta tocada
+    estado.cartasVolteadas.push({
+        html: elementoHtml,
+        datos: cartaObjeto
+    });
+
+    // D. ¿ES LA SEGUNDA CARTA?
+    // Si la bolsa de volteadas llegó a 2, es hora de evaluar
+    if (estado.cartasVolteadas.length === 2) {
+        verificarPareja();
+    }
+}
+
+
+// 5. VALIDACIÓN DE PAREJAS (Coincide ID / No coincide)
+
+function verificarPareja() {
+    const estado = window.gameState;
+    
+    // Bloqueamos el tablero de inmediato para evitar el "tercer clic" rápido
+    estado.tableroBloqueado = true;
+
+    // Extraemos las dos cartas de la bolsa de control
+    const [carta1, carta2] = estado.cartasVolteadas;
+
+    // COMPARACIÓN LÓGICA: ¿Tienen el mismo ID de personaje?
+    const esPareja = carta1.datos.id === carta2.datos.id;
+
+    if (esPareja) {
+        // CASO ÉXITO: Son iguales
+        console.log("⚔️ ¡Excelente! Pareja encontrada:", carta1.datos.id);
+        
+        estado.parejasEncontradas++;
+        
+        // Limpiamos la bolsa de control para el próximo turno y desbloqueamos
+        estado.cartasVolteadas = [];
+        estado.tableroBloqueado = false;
+
+        // Aquí inyectaremos más adelante el sistema de puntos de los modos de juego
+    } else {
+        // CASO ERROR: Son diferentes
+        console.log("❌ No coinciden. Volviendo a ocultar...");
+
+        // Usamos setTimeout para darle 1.2 segundos al usuario para memorizar
+        // antes de voltear las cartas boca abajo automáticamente
+        setTimeout(() => {
+            carta1.html.classList.remove('volteada');
+            carta2.html.classList.remove('volteada');
+
+            // Una vez que se ocultaron visualmente, limpiamos la memoria y desbloqueamos el tablero
+            estado.cartasVolteadas = [];
+            estado.tableroBloqueado = false;
+        }, 1200); // 1200 milisegundos = 1.2 segundos
+    }
 }
