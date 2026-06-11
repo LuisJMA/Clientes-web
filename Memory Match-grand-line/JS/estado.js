@@ -9,7 +9,12 @@ window.gameState = {
     players: {
         p1: { name: '', score: 0 },
         p2: { name: '', score: 0 }
-    }
+    },
+
+    cartasVolteadas: [], // Guardará máximo 2 cartas para compararlas
+    tableroBloqueado: false, // Evita el "tercer clic" tramposo mientras validamos
+    parejasEncontradas: 0 // Llevará la cuenta para saber cuándo termina la partida
+
 };
 
 // Mensaje de éxito actualizado
