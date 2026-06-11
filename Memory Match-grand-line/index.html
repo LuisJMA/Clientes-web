@@ -66,6 +66,15 @@
         </form>
     </section>
 
+    <!-- PANTALLA 2: EL TABLERO DE JUEGO (Oculta al principio) -->
+    <section id="pantalla-juego" style="display: none;">
+        <!-- El HUD mostrará los puntos, turnos o el reloj dinámicamente -->
+        <div id="hud-informacion"></div>
+        
+        <!-- Este contenedor vacío será la cuadrícula donde JavaScript inyectará las cartas -->
+        <div id="contenedor-tablero"></div>
+    </section>
+
     <script src="js/sagas.js"></script>
     <script src="JS/estado.js"></script>
 </body>
