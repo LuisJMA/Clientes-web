@@ -52,3 +52,50 @@ function inicializarCartas() {
     console.log("🎲 Cartas duplicadas y barajadas con éxito para la partida:", barajaMezclada);
     return barajaMezclada;
 }
+
+
+// 3. RENDERIZADO VISUAL DEL TABLERO
+function renderizarTablero(cartas) {
+    // A. Capturamos el contenedor del tablero que dejamos vacío en el HTML
+    const contenedorTablero = document.getElementById('contenedor-tablero');
+    
+    // B. Limpiamos el contenedor por si había una partida vieja guardada
+    contenedorTablero.innerHTML = '';
+
+    // C. Configuramos la cuadrícula de forma dinámica según la dificultad
+    // Le aplicamos una clase CSS al contenedor para que luego el estilo sepa cuántas columnas estirar
+    const dificultad = window.gameState.difficulty;
+    contenedorTablero.className = `tablero-${dificultad}`;
+
+    // D. Recorremos el mazo de cartas barajadas para fabricar cada carta en la pantalla
+    cartas.forEach((carta, indice) => {
+        
+        // 1. Creamos el div principal que representará la carta física
+        const divCarta = document.createElement('div');
+        divCarta.classList.add('carta');
+        
+        // Guardamos el índice de la posición de la carta en un atributo de datos nativo ('data-')
+        // Esto le servirá a la lógica de clics para saber exactamente cuál carta se tocó
+        divCarta.dataset.indice = indice;
+
+        // 2. Creamos la "Estructura Interna" de la carta (Efecto Sándwich para el giro 3D)
+        // Cada carta tendrá una cara interna (boca abajo) y una externa (el emoji del personaje)
+        divCarta.innerHTML = `
+            <div class="carta-interna">
+                <div class="cara-atras">🏴‍☠️</div>
+                <div class="cara-frente">${carta.content}</div>
+            </div>
+        `;
+
+        // 3. ¡EL ESCUCHADOR DE CLICS!: Le asignamos vida e interacción a la carta
+        divCarta.addEventListener('click', function() {
+            console.log(`Se hizo clic en la carta con ID: ${carta.id} en la posición: ${indice}`);
+            // Aquí llamaremos más adelante a la función para voltear la carta
+        });
+
+        // 4. Inyectamos la carta recién fabricada dentro de la caja madre en el HTML
+        contenedorTablero.appendChild(divCarta);
+    });
+
+    console.log(`¡Tablero visual renderizado con éxito para el modo ${dificultad}!`);
+}
