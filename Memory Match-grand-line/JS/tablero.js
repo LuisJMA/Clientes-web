@@ -153,6 +153,11 @@ function verificarPareja() {
         
         estado.parejasEncontradas++;
 
+        if (estado.mode === 'pvp') {
+            estado.players[estado.turnoActual].score++;
+            actualizarHudVersus(); // Refrescamos los números en la pantalla de inmediato
+        }
+
         // Calculamos cuántas parejas requiere la dificultad actual para declarar victoria
         let parejasTotales = 8; // Fácil por defecto (4x4)
         if (estado.difficulty === 'intermedio') parejasTotales = 18; // Intermedio (6x6)
