@@ -163,41 +163,35 @@ function verificarPareja() {
         if (estado.difficulty === 'intermedio') parejasTotales = 18; // Intermedio (6x6)
         if (estado.difficulty === 'dificil') parejasTotales = 32;    // Difícil (8x8)
 
-        
-        //  VALIDACIÓN DE VICTORIA UNIFICADA
-        // Reemplazamos el 'if' viejo por este que dispara el fin del juego para todos
-        
-        if (estado.parejasEncontradas === parejasTotales) {
-            if (estado.mode === 'solitario') {
-                detenerCronometro(); // Esta función viene de tiempo.js
-            }
-            finalizarPartida(); // Llamamos a la pantalla de resultados
-        }    
-        
-
-        // Limpiamos la bolsa de control para el próximo turno y desbloqueamos
+        // Limpiamos la bolsa de control para el próximo turno y desbloqueamos antes de evaluar victoria
         estado.cartasVolteadas = [];
         estado.tableroBloqueado = false;
+
+        // VALIDACIÓN DE VICTORIA BLINDADA
+        if (estado.parejasEncontradas === parejasTotales) {
+            if (estado.mode === 'solitario') {
+                detenerCronometro(); 
+            }
+            // Le damos 300 milisegundos para que el usuario vea su última pareja completada
+            // y el HUD se actualice antes de cambiar de pantalla abruptamente
+            setTimeout(() => {
+                finalizarPartida(); 
+            }, 300);
+        }    
     } 
     else {
         // CASO ERROR: Son diferentes
         console.log("❌ No coinciden. Volviendo a ocultar...");
 
-        
-        // REGISTRO DE FALLOS
-        // Sumamos un fallo en la bitácora al jugador que cometió el error
-        
         if (estado.mode === 'pvp') {
             estado.players[estado.turnoActual].fails++;
         } else {
-            estado.players.p1.fails++; // En solitario o libre se le asignan a p1
+            estado.players.p1.fails++; 
         }
-        
 
         if (estado.mode === 'pvp') {
-            // Alternamos de forma limpia usando un operador ternario
             estado.turnoActual = (estado.turnoActual === 'p1') ? 'p2' : 'p1';
-            actualizarHudVersus(); // El brillo dorado salta al rival de inmediato
+            actualizarHudVersus(); 
         }
 
         // Usamos setTimeout para darle 1.2 segundos al usuario para memorizar
@@ -208,10 +202,9 @@ function verificarPareja() {
             // Una vez que se ocultaron visualmente, limpiamos la memoria y desbloqueamos el tablero
             estado.cartasVolteadas = [];
             estado.tableroBloqueado = false;
-        }, 1200); // 1200 milisegundos = 1.2 segundos
+        }, 1200); 
     }
 }
-
 // 6. FUNCIÓN AUXILIAR PARA EL MODO VERSUS
 function actualizarHudVersus() {
     const estado = window.gameState;
