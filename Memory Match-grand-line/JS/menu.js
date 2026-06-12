@@ -73,6 +73,11 @@ formulario.addEventListener('submit', function(evento) {
     pantallaJuego.style.display = 'block';
 
     console.log("Navegando al tablero...");
+
+    // Si el usuario eligió jugar solo, encendemos el cronómetro de inmediato.
+    if (window.gameState.mode === 'solitario') {
+        iniciarCronometro(); // Esta función viene importada desde tiempo.js
+    }
 });
 
 // 4. INICIALIZACIÓN AUTOMÁTICA
