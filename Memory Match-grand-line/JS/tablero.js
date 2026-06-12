@@ -56,6 +56,8 @@ function inicializarCartas() {
 
 // 3. RENDERIZADO VISUAL DEL TABLERO
 function renderizarTablero(cartas) {
+    const estado = window.gameState;
+    
     // A. Capturamos el contenedor del tablero que dejamos vacío en el HTML
     const contenedorTablero = document.getElementById('contenedor-tablero');
     
@@ -63,23 +65,25 @@ function renderizarTablero(cartas) {
     contenedorTablero.innerHTML = '';
 
     // C. Configuramos la cuadrícula de forma dinámica según la dificultad
-    // Le aplicamos una clase CSS al contenedor para que luego el estilo sepa cuántas columnas estirar
-    const dificultad = window.gameState.difficulty;
+    const dificultad = estado.difficulty;
     contenedorTablero.className = `tablero-${dificultad}`;
+
+    //  Nadie puede hacer clics rápidos durante el vistazo previo
+    estado.tableroBloqueado = true;
 
     // D. Recorremos el mazo de cartas barajadas para fabricar cada carta en la pantalla
     cartas.forEach((carta, indice) => {
         
         // 1. Creamos el div principal que representará la carta física
         const divCarta = document.createElement('div');
-        divCarta.classList.add('carta');
+        divCarta.classList.add('carta'); 
+        // --- CAMBIO: Forzamos la clase 'volteada' un milisegundo después ---
+        setTimeout(() => divCarta.classList.add('volteada'), 1);
         
         // Guardamos el índice de la posición de la carta en un atributo de datos nativo ('data-')
-        // Esto le servirá a la lógica de clics para saber exactamente cuál carta se tocó
         divCarta.dataset.indice = indice;
 
-        // 2. Creamos la "Estructura Interna" de la carta (Efecto Sándwich para el giro 3D)
-        // Cada carta tendrá una cara interna (boca abajo) y una externa (el emoji del personaje)
+        // 2. Creamos la "Estructura Interna" de la carta respetando tus clases originales
         divCarta.innerHTML = `
             <div class="carta-interna">
                 <div class="cara-atras">🏴‍☠️</div>
@@ -97,7 +101,30 @@ function renderizarTablero(cartas) {
         contenedorTablero.appendChild(divCarta);
     });
 
-    console.log(`¡Tablero visual renderizado con éxito para el modo ${dificultad}!`);
+    console.log(`¡Tablero visual renderizado con éxito para el modo ${dificultad}! Iniciando vistazo...`);
+
+    
+    //  MECANISMO DEL VISTAZO INICIAL (3.5 Segundos de cortesía)
+    
+    setTimeout(() => {
+        // Buscamos todas las cartas que creamos en el DOM y les removemos la clase para ocultarlas
+        const todasLasCartas = document.querySelectorAll('.carta');
+        todasLasCartas.forEach(cartaHTML => {
+            cartaHTML.classList.remove('volteada');
+        });
+
+        // Desbloqueamos el control lógico del juego para permitir los clics
+        estado.tableroBloqueado = false;
+        console.log("⚔️ ¡Vistazo terminado! Haki de observación activado. ¡A jugar!");
+
+        // REGLA DEL CRONÓMETRO: Si es modo solitario
+        if (estado.mode === 'solitario') {
+            document.getElementById('segundos').textContent = '0'; 
+            iniciarCronometro(); // Esta función viene de tiempo.js
+        }
+
+    }, 3500); // 3500 milisegundos = 3.5 segundos 
+    // ==========================================================================
 }
 
 
