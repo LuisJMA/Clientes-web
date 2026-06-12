@@ -215,3 +215,41 @@ button:hover {
 }
 
 .vs-emblema { font-weight: bold; color: #e74c3c; font-size: 1.2rem; }
+
+/* 
+   AJUSTES RESPONSIVOS (PARA CELULARES)
+    */
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Menos espacio en los bordes del móvil */
+    }
+
+    .contenedor-pantalla {
+        padding: 20px;
+        width: 95%; /* Que ocupe casi toda la pantalla */
+    }
+
+    /* Reducimos el tamaño de las cartas para que quepan en la pantalla */
+    #contenedor-tablero {
+        gap: 8px; /* Un poco menos de espacio entre cartas */
+    }
+
+    /* Ajuste específico para que las cartas no sean gigantes */
+    .carta {
+        min-width: 50px; 
+    }
+
+    .cara-atras, .cara-frente {
+        font-size: 1.5rem; /* Emoji más pequeño para que no se salga */
+    }
+
+    /* Ajustamos el HUD (Marcador) para que los textos sean legibles */
+    .marcador-versus {
+        padding: 5px;
+        font-size: 0.9rem;
+    }
+    
+    .bando-jugador .puntos {
+        font-size: 1.2rem;
+    }
+}
