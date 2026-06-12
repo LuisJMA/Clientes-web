@@ -11,6 +11,15 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+
+    background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.75)), 
+                      url('../imagen/fondo.png'); 
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
 }
 
 /* Clase utilitaria para ocultar las pantallas que no se están usando */
