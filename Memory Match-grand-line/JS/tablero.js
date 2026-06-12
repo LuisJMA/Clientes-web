@@ -232,3 +232,90 @@ function actualizarHudVersus() {
         divP1.classList.remove('activo');
     }
 }
+
+// PANTALLA DE RESULTADOS Y FIN DE JUEGO
+function finalizarPartida() {
+    const estado = window.gameState;
+    const bloqueEstadisticas = document.getElementById('bloque-estadisticas');
+    let tituloGanador = "";
+    let tablaResultados = "";
+
+    if (estado.mode === 'pvp') {
+        const p1 = estado.players.p1;
+        const p2 = estado.players.p2;
+
+        if (p1.score > p2.score) {
+            tituloGanador = `👑 ¡El Rey de los Piratas es ${p1.name}! 👑`;
+        } else if (p2.score > p1.score) {
+            tituloGanador = `👑 ¡El Rey de los Piratas es ${p2.name}! 👑`;
+        } else {
+            tituloGanador = "🏴‍☠️ ¡Un empate en Grand Line! Ambos son formidables 🏴‍☠️";
+        }
+
+        tablaResultados = `
+            <div class="cuadro-estadisticas">
+                <h3>${tituloGanador}</h3>
+                <hr>
+                <p><strong>🏴‍☠️ ${p1.name}:</strong> ${p1.score} parejas | ❌ ${p1.fails} fallos</p>
+                <p><strong>⚔️ ${p2.name}:</strong> ${p2.score} parejas | ❌ ${p2.fails} fallos</p>
+            </div>
+        `;
+    } else {
+        tituloGanador = `🏆 ¡Travesía Completada, ${estado.players.p1.name}! 🏆`;
+        const tiempoTexto = (estado.mode === 'solitario') ? `<p>⏱️ <strong>Tiempo:</strong> ${estado.tiempoTranscurrido}s</p>` : '';
+        tablaResultados = `
+            <div class="cuadro-estadisticas">
+                <h3>${tituloGanador}</h3>
+                <hr>
+                ${tiempoTexto}
+                <p>❌ <strong>Fallos totales:</strong> ${estado.players.p1.fails}</p>
+            </div>
+        `;
+    }
+
+    bloqueEstadisticas.innerHTML = `
+        ${tablaResultados}
+        <div class="contenedor-botones-final">
+            <button id="btn-revancha" class="btn-final">🔄 Revancha Rápida</button>
+            <button id="btn-menu" class="btn-final">🏠 Volver al Menú</button>
+        </div>
+    `;
+
+    document.getElementById('btn-revancha').addEventListener('click', iniciarRevancha);
+    document.getElementById('btn-menu').addEventListener('click', volverAlMenuPrincipal);
+    document.getElementById('pantalla-juego').style.display = 'none';
+    document.getElementById('pantalla-resultados').style.display = 'block';
+}
+
+function iniciarRevancha() {
+    const estado = window.gameState;
+    estado.parejasEncontradas = 0;
+    estado.tiempoTranscurrido = 0;
+    estado.tableroBloqueado = false;
+    estado.cartasVolteadas = [];
+    estado.turnoActual = 'p1';
+    estado.players.p1.score = 0;
+    estado.players.p1.fails = 0;
+    estado.players.p2.score = 0;
+    estado.players.p2.fails = 0;
+
+    const nuevasCartas = inicializarCartas();
+    renderizarTablero(nuevasCartas);
+
+    if (estado.mode === 'solitario') {
+        iniciarCronometro(); 
+    } else if (estado.mode === 'pvp') {
+        actualizarHudVersus();
+    }
+
+    document.getElementById('pantalla-resultados').style.display = 'none';
+    document.getElementById('pantalla-juego').style.display = 'block';
+}
+
+function volverAlMenuPrincipal() {
+    document.getElementById('pantalla-resultados').style.display = 'none';
+    document.getElementById('pantalla-menu').style.display = 'block';
+    document.getElementById('formulario-config').reset();
+    document.getElementById('bloque-jugador2').style.display = 'none';
+    document.getElementById('nombre-p2').required = false;
+}
