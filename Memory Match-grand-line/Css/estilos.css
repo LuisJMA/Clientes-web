@@ -92,3 +92,10 @@ body {
     background-color: #3d3d3d;
     transform: rotateY(180deg); /* Nace ya girada hacia atrás en el sándwich */
 }
+
+/* MODO INTERMEDIO: 36 Cartas -> Cuadrícula cuadrada de 6x6 */
+#contenedor-tablero.tablero-intermedio {
+    grid-template-columns: repeat(6, minmax(55px, 1fr)); /* 6 columnas */
+    max-width: 500px; /* Contenedor controlado para mantener la forma cuadrada */
+    margin: 20px auto 0 auto;
+}
