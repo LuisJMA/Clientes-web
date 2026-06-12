@@ -1,0 +1,94 @@
+/* 
+   1. ESTRUCTURA BASE (SPA) Y PANTALLAS
+    */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Clase utilitaria para ocultar las pantallas que no se están usando */
+.oculto {
+    display: none !important;
+}
+
+.contenedor-pantalla {
+    background-color: #262626;
+    border: 3px solid #b38f00; /* Dorado Pirata */
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+/* 
+   2. EL CONTENEDOR DEL TABLERO (CSS GRID)
+    */
+#contenedor-tablero {
+    display: grid;
+    /* Creamos 4 columnas automáticas del mismo tamaño */
+    grid-template-columns: repeat(4, minmax(70px, 1fr)); 
+    gap: 12px; /* Espacio de separación entre cartas */
+    margin-top: 20px;
+    perspective: 1000px; /* Crucial: Da profundidad 3D al voltear las cartas */
+}
+
+/* 
+   3. ESTRUCTURA 3D DE LAS CARTAS (EL SÁNDWICH)
+    */
+.carta {
+    background-color: transparent;
+    aspect-ratio: 1 / 1; /* Hace que las cartas sean perfectamente cuadradas */
+    cursor: pointer;
+}
+
+/* El contenedor interno que realmente va a rotar */
+.carta-interna {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s; /* Duración del giro */
+    transform-style: preserve-3d; /* Permite que los hijos hereden el entorno 3D */
+}
+
+/* CUANDO LA CARTA TIENE LA CLASE .volteada, SE EJECUTA EL GIRO */
+.carta.volteada .carta-interna {
+    transform: rotateY(180deg);
+}
+
+/* Reglas comunes para ambas caras (Frente y Atrás) */
+.cara-atras, .cara-frente {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Oculta la espalda cuando se gira */
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem; /* Tamaño de los emojis */
+    border-radius: 8px;
+    border: 2px solid #b38f00;
+}
+
+/* CARA DE ATRÁS: La bandera pirata visible al inicio */
+.cara-atras {
+    background-color: #2b2b2b;
+    color: white;
+}
+
+/* CARA DE FRENTE: El emoji oculto del personaje */
+.cara-frente {
+    background-color: #3d3d3d;
+    transform: rotateY(180deg); /* Nace ya girada hacia atrás en el sándwich */
+}
