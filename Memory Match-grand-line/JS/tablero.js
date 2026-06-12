@@ -152,13 +152,25 @@ function verificarPareja() {
         console.log("⚔️ ¡Excelente! Pareja encontrada:", carta1.datos.id);
         
         estado.parejasEncontradas++;
-        
+
+        // Calculamos cuántas parejas requiere la dificultad actual para declarar victoria
+        let parejasTotales = 8; // Fácil por defecto (4x4)
+        if (estado.difficulty === 'intermedio') parejasTotales = 18; // Intermedio (6x6)
+        if (estado.difficulty === 'dificil') parejasTotales = 32;    // Difícil (8x8)
+
+        // Si se encontraron todas las parejas y el modo es solitario, congelamos el tiempo
+        if (estado.parejasEncontradas === parejasTotales && estado.mode === 'solitario') {
+            detenerCronometro(); // Esta función viene de tiempo.js
+            console.log(`🏆 ¡Felicidades! Completaste el tablero en ${estado.tiempoTranscurrido} segundos.`);
+        }    
+
         // Limpiamos la bolsa de control para el próximo turno y desbloqueamos
         estado.cartasVolteadas = [];
         estado.tableroBloqueado = false;
 
         // Aquí inyectaremos más adelante el sistema de puntos de los modos de juego
-    } else {
+    } 
+    else {
         // CASO ERROR: Son diferentes
         console.log("❌ No coinciden. Volviendo a ocultar...");
 
