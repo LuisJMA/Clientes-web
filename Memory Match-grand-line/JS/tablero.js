@@ -163,23 +163,37 @@ function verificarPareja() {
         if (estado.difficulty === 'intermedio') parejasTotales = 18; // Intermedio (6x6)
         if (estado.difficulty === 'dificil') parejasTotales = 32;    // Difícil (8x8)
 
-        // Si se encontraron todas las parejas y el modo es solitario, congelamos el tiempo
-        if (estado.parejasEncontradas === parejasTotales && estado.mode === 'solitario') {
-            detenerCronometro(); // Esta función viene de tiempo.js
-            console.log(`🏆 ¡Felicidades! Completaste el tablero en ${estado.tiempoTranscurrido} segundos.`);
+        
+        //  VALIDACIÓN DE VICTORIA UNIFICADA
+        // Reemplazamos el 'if' viejo por este que dispara el fin del juego para todos
+        
+        if (estado.parejasEncontradas === parejasTotales) {
+            if (estado.mode === 'solitario') {
+                detenerCronometro(); // Esta función viene de tiempo.js
+            }
+            finalizarPartida(); // Llamamos a la pantalla de resultados
         }    
+        
 
         // Limpiamos la bolsa de control para el próximo turno y desbloqueamos
         estado.cartasVolteadas = [];
         estado.tableroBloqueado = false;
-
-        // sistema de puntos de los modos de juego
     } 
     else {
         // CASO ERROR: Son diferentes
         console.log("❌ No coinciden. Volviendo a ocultar...");
 
-        // [REGLA VERSUS]: Si están en PvP y fallan, el turno cambia antes de voltear las cartas
+        
+        // REGISTRO DE FALLOS
+        // Sumamos un fallo en la bitácora al jugador que cometió el error
+        
+        if (estado.mode === 'pvp') {
+            estado.players[estado.turnoActual].fails++;
+        } else {
+            estado.players.p1.fails++; // En solitario o libre se le asignan a p1
+        }
+        
+
         if (estado.mode === 'pvp') {
             // Alternamos de forma limpia usando un operador ternario
             estado.turnoActual = (estado.turnoActual === 'p1') ? 'p2' : 'p1';
@@ -187,7 +201,6 @@ function verificarPareja() {
         }
 
         // Usamos setTimeout para darle 1.2 segundos al usuario para memorizar
-        // antes de voltear las cartas boca abajo automáticamente
         setTimeout(() => {
             carta1.html.classList.remove('volteada');
             carta2.html.classList.remove('volteada');
