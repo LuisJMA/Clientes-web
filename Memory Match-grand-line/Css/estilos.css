@@ -106,3 +106,45 @@ body {
     max-width: 550px; /* Un poco más ancho pero compacto para que quepan las 8 filas hacia abajo */
     margin: 20px auto 0 auto;
 }
+
+/* 
+    VISOR VERSUS (PvP)
+  */
+.marcador-versus {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.bando-jugador {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.1rem;
+    color: #888; /* Gris apagado cuando no es su turno */
+    transition: all 0.3s ease;
+}
+
+.bando-jugador .puntos {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* Hace brillar al jugador que tiene el turno activo */
+.bando-jugador.activo {
+    color: #f39c12; /* Dorado radiante */
+    text-shadow: 0 0 12px rgba(243, 156, 18, 0.6);
+    transform: scale(1.1); /* Crece un 10% para resaltar en la interfaz */
+}
+
+.vs-emblema {
+    font-weight: bold;
+    color: #e74c3c; 
+    font-size: 1.2rem;
+}
