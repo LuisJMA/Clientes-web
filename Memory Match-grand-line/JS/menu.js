@@ -1,5 +1,7 @@
 // 1. FASE DE CONFIGURACIÓN: LOCALIZACIÓN DE CAJAS
 // Buscamos TODOS los elementos del HTML una sola vez al principio para ahorrar memoria.
+const visorTiempo = document.getElementById('visor-tiempo');
+const visorVersus = document.getElementById('visor-versus');
 const selectorModo = document.getElementById('modo-juego');
 const selectorDificultad = document.getElementById('dificultad');
 const selectorSaga = document.getElementById('saga-seleccionada');
@@ -54,7 +56,14 @@ formulario.addEventListener('submit', function(evento) {
     // Si es PvP, guardamos al Jugador 2, si no, nos aseguramos de dejarlo vacío
     if (window.gameState.mode === 'pvp') {
         window.gameState.players.p2.name = nombre2 || "Capitán 2";
-    } else {
+    
+        //  REGLAS DE INICIO PVP:
+        window.gameState.players.p1.score = 0;
+        window.gameState.players.p2.score = 0;
+        window.gameState.turnoActual = 'p1'; // Siempre arranca el P1
+    } 
+    
+    else {
         window.gameState.players.p2.name = "";
     }
 
@@ -76,8 +85,29 @@ formulario.addEventListener('submit', function(evento) {
 
     // Si el usuario eligió jugar solo, encendemos el cronómetro de inmediato.
     if (window.gameState.mode === 'solitario') {
+        visorVersus.style.display = 'none';  // Ocultamos versus
+        visorTiempo.style.display = 'block'; // Mostramos tiempo
         iniciarCronometro(); // Esta función viene importada desde tiempo.js
     }
+
+    else if (window.gameState.mode === 'pvp') {
+        visorTiempo.style.display = 'none';  // Ocultamos tiempo
+        visorVersus.style.display = 'flex';  // Mostramos versus en modo flex layout
+        
+        // Inyectamos los nombres reales de los jugadores en el HUD
+        document.getElementById('nombre-hud-p1').textContent = window.gameState.players.p1.name;
+        document.getElementById('nombre-hud-p2').textContent = window.gameState.players.p2.name;
+        
+        // Reseteamos los marcadores visuales de puntos a cero
+        document.getElementById('score-hud-p1').textContent = '0';
+        document.getElementById('score-hud-p2').textContent = '0';
+        
+        // Nos aseguramos de que visualmente resalte el Jugador 1 como activo
+        document.getElementById('hud-p1').classList.add('activo');
+        document.getElementById('hud-p2').classList.remove('activo');
+    }
+
+
 });
 
 // 4. INICIALIZACIÓN AUTOMÁTICA
