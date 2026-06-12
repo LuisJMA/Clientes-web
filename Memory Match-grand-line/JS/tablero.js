@@ -168,11 +168,18 @@ function verificarPareja() {
         estado.cartasVolteadas = [];
         estado.tableroBloqueado = false;
 
-        // Aquí inyectaremos más adelante el sistema de puntos de los modos de juego
+        // sistema de puntos de los modos de juego
     } 
     else {
         // CASO ERROR: Son diferentes
         console.log("❌ No coinciden. Volviendo a ocultar...");
+
+        // [REGLA VERSUS]: Si están en PvP y fallan, el turno cambia antes de voltear las cartas
+        if (estado.mode === 'pvp') {
+            // Alternamos de forma limpia usando un operador ternario
+            estado.turnoActual = (estado.turnoActual === 'p1') ? 'p2' : 'p1';
+            actualizarHudVersus(); // El brillo dorado salta al rival de inmediato
+        }
 
         // Usamos setTimeout para darle 1.2 segundos al usuario para memorizar
         // antes de voltear las cartas boca abajo automáticamente
@@ -184,5 +191,26 @@ function verificarPareja() {
             estado.cartasVolteadas = [];
             estado.tableroBloqueado = false;
         }, 1200); // 1200 milisegundos = 1.2 segundos
+    }
+}
+
+// 6. FUNCIÓN AUXILIAR PARA EL MODO VERSUS
+function actualizarHudVersus() {
+    const estado = window.gameState;
+    
+    // Actualizamos los números de los puntos en pantalla
+    document.getElementById('score-hud-p1').textContent = estado.players.p1.score;
+    document.getElementById('score-hud-p2').textContent = estado.players.p2.score;
+
+    // Cambiamos el brillo dorado según quién tenga el turno actual
+    const divP1 = document.getElementById('hud-p1');
+    const divP2 = document.getElementById('hud-p2');
+
+    if (estado.turnoActual === 'p1') {
+        divP1.classList.add('activo');
+        divP2.classList.remove('activo');
+    } else {
+        divP2.classList.add('activo');
+        divP1.classList.remove('activo');
     }
 }
