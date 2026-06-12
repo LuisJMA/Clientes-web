@@ -7,8 +7,8 @@ window.gameState = {
     // Agregamos la estructura para los nombres y las puntuaciones iniciales
     // p1 será el Jugador 1 y p2 el Jugador 2 para el modo Versus
     players: {
-        p1: { name: '', score: 0 },
-        p2: { name: '', score: 0 }
+        p1: { name: '', score: 0, fails: 0 },
+        p2: { name: '', score: 0, fails: 0 }
     },
 
     turnoActual: 'p1',
