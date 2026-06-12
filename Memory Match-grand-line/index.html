@@ -70,9 +70,23 @@
     <!-- PANTALLA 2: EL TABLERO DE JUEGO (Oculta al principio) -->
     <section id="pantalla-juego" style="display: none;">
         <div id="hud-informacion">
+            
             <div id="visor-tiempo" class="marcador-tiempo">
                 <span>Tiempo: </span><span id="segundos">0</span>s
             </div>
+
+            <div id="visor-versus" class="marcador-versus" style="display: none;">
+                <div id="hud-p1" class="bando-jugador activo">
+                    <span id="nombre-hud-p1">Jugador 1</span>
+                    <span id="score-hud-p1" class="puntos">0</span>
+                </div>
+                <div class="vs-emblema">VS</div>
+                <div id="hud-p2" class="bando-jugador">
+                    <span id="nombre-hud-p2">Jugador 2</span>
+                    <span id="score-hud-p2" class="puntos">0</span>
+                </div>
+            </div>
+
         </div>
         
         <div id="contenedor-tablero"></div>
