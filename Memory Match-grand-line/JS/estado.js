@@ -11,10 +11,15 @@ window.gameState = {
         p2: { name: '', score: 0 }
     },
 
+    turnoActual: 'p1',
+
     cartasVolteadas: [], // Guardará máximo 2 cartas para compararlas
     tableroBloqueado: false, // Evita el "tercer clic" tramposo mientras validamos
-    parejasEncontradas: 0 // Llevará la cuenta para saber cuándo termina la partida
+    parejasEncontradas: 0, // Llevará la cuenta para saber cuándo termina la partida
 
+    // AGREGAMOS EL TIEMPO AL MISMO NIVEL DE CONTROL:
+    tiempoTranscurrido: 0, // Segundos acumulados
+    cronometroId: null     // ID del intervalo para poder apagarlo luego
 };
 
 // Mensaje de éxito actualizado
