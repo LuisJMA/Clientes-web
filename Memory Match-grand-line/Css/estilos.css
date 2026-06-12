@@ -99,3 +99,10 @@ body {
     max-width: 500px; /* Contenedor controlado para mantener la forma cuadrada */
     margin: 20px auto 0 auto;
 }
+
+/* MODO DIFÍCIL: 64 Cartas -> Cuadrícula cuadrada de 8x8 */
+#contenedor-tablero.tablero-dificil {
+    grid-template-columns: repeat(8, minmax(45px, 1fr)); /* 8 columnas */
+    max-width: 550px; /* Un poco más ancho pero compacto para que quepan las 8 filas hacia abajo */
+    margin: 20px auto 0 auto;
+}
