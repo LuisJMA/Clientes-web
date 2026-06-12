@@ -1,5 +1,5 @@
 /* 
-   1. ESTRUCTURA BASE (SPA) Y PANTALLAS
+    ESTILOS GENERALES Y FONDO
     */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,6 +12,7 @@ body {
     align-items: center;
     min-height: 100vh;
 
+    /* Fondo temático */
     background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.75)), 
                       url('../imagen/fondo.png'); 
     
@@ -19,106 +20,171 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-
 }
 
-/* Clase utilitaria para ocultar las pantallas que no se están usando */
 .oculto {
     display: none !important;
 }
 
+/* 
+   2. DISEÑO DE MENÚS (CONTENEDOR PANTALLA)
+    */
 .contenedor-pantalla {
-    background-color: #262626;
-    border: 3px solid #b38f00; /* Dorado Pirata */
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    background-color: rgba(12, 18, 28, 0.85);
+    border: 3px solid #b38f00;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(179, 143, 0, 0.3);
     max-width: 500px;
-    width: 100%;
+    width: 90%;
     text-align: center;
     margin: 0 auto;
+    backdrop-filter: blur(10px);
+    color: white;
+}
+
+.contenedor-pantalla h1 { 
+    color: #f3cb65; 
+    text-transform: uppercase; 
+    margin-top: 0;
+}
+
+.contenedor-pantalla p {
+    color: #bda054;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    font-style: italic;
+    border-bottom: 1px solid #bda054;
+    padding-bottom: 10px;
 }
 
 /* 
-   2. EL CONTENEDOR DEL TABLERO (CSS GRID)
+   3. ESTILIZADO DE CAMPOS Y FORMULARIOS
+    */
+.grupo-campo {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.grupo-campo label {
+    display: block;
+    color: #f3cb65;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.contenedor-pantalla input[type="text"],
+.contenedor-pantalla select {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 2px solid #5d4a00;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.contenedor-pantalla input[type="text"]:focus,
+.contenedor-pantalla select:focus {
+    outline: none;
+    border-color: #f3cb65;
+    background-color: rgba(20, 20, 20, 0.8);
+    box-shadow: 0 0 10px rgba(243, 203, 101, 0.3);
+}
+
+button {
+    width: 100%;
+    background: linear-gradient(135deg, #b38f00, #5d4a00);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: transform 0.2s;
+    margin-top: 15px;
+}
+
+button:hover {
+    transform: scale(1.02);
+    background: linear-gradient(135deg, #d4a900, #7a6300);
+}
+
+/* 
+   4. TABLERO Y CARTAS
     */
 #contenedor-tablero {
     display: grid;
-    /* Creamos 4 columnas automáticas del mismo tamaño */
     grid-template-columns: repeat(4, minmax(70px, 1fr)); 
-    gap: 12px; /* Espacio de separación entre cartas */
+    gap: 12px;
     margin-top: 20px;
-    perspective: 1000px; /* Crucial: Da profundidad 3D al voltear las cartas */
+    perspective: 1000px;
 }
 
-/* 
-   3. ESTRUCTURA 3D DE LAS CARTAS (EL SÁNDWICH)
-    */
 .carta {
     background-color: transparent;
-    aspect-ratio: 1 / 1; /* Hace que las cartas sean perfectamente cuadradas */
+    aspect-ratio: 1 / 1;
     cursor: pointer;
 }
 
-/* El contenedor interno que realmente va a rotar */
 .carta-interna {
     position: relative;
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.6s; /* Duración del giro */
-    transform-style: preserve-3d; /* Permite que los hijos hereden el entorno 3D */
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
 }
 
-/* CUANDO LA CARTA TIENE LA CLASE .volteada, SE EJECUTA EL GIRO */
 .carta.volteada .carta-interna {
     transform: rotateY(180deg);
 }
 
-/* Reglas comunes para ambas caras (Frente y Atrás) */
 .cara-atras, .cara-frente {
     position: absolute;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden; /* Oculta la espalda cuando se gira */
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2.5rem; /* Tamaño de los emojis */
+    font-size: 2.5rem;
     border-radius: 8px;
     border: 2px solid #b38f00;
 }
 
-/* CARA DE ATRÁS: La bandera pirata visible al inicio */
 .cara-atras {
-    background-color: #2b2b2b;
-    color: white;
+    background: linear-gradient(135deg, #1a1a1a, #2b2b2b);
+    color: #b38f00;
 }
 
-/* CARA DE FRENTE: El emoji oculto del personaje */
 .cara-frente {
-    background-color: #3d3d3d;
-    transform: rotateY(180deg); /* Nace ya girada hacia atrás en el sándwich */
+    background-color: #f0f0f0;
+    transform: rotateY(180deg);
 }
 
-/* MODO INTERMEDIO: 36 Cartas -> Cuadrícula cuadrada de 6x6 */
 #contenedor-tablero.tablero-intermedio {
-    grid-template-columns: repeat(6, minmax(55px, 1fr)); /* 6 columnas */
-    max-width: 500px; /* Contenedor controlado para mantener la forma cuadrada */
+    grid-template-columns: repeat(6, minmax(55px, 1fr));
+    max-width: 500px;
     margin: 20px auto 0 auto;
 }
 
-/* MODO DIFÍCIL: 64 Cartas -> Cuadrícula cuadrada de 8x8 */
 #contenedor-tablero.tablero-dificil {
-    grid-template-columns: repeat(8, minmax(45px, 1fr)); /* 8 columnas */
-    max-width: 550px; /* Un poco más ancho pero compacto para que quepan las 8 filas hacia abajo */
+    grid-template-columns: repeat(8, minmax(45px, 1fr));
+    max-width: 550px;
     margin: 20px auto 0 auto;
 }
 
 /* 
-    VISOR VERSUS (PvP)
-  */
+   5. MARCADOR VERSUS
+    */
 .marcador-versus {
     display: flex;
     justify-content: space-around;
@@ -136,24 +202,16 @@ body {
     flex-direction: column;
     align-items: center;
     font-size: 1.1rem;
-    color: #888; /* Gris apagado cuando no es su turno */
+    color: #888;
     transition: all 0.3s ease;
 }
 
-.bando-jugador .puntos {
-    font-size: 1.8rem;
-    font-weight: bold;
-}
+.bando-jugador .puntos { font-size: 1.8rem; font-weight: bold; }
 
-/* Hace brillar al jugador que tiene el turno activo */
 .bando-jugador.activo {
-    color: #f39c12; /* Dorado radiante */
+    color: #f39c12;
     text-shadow: 0 0 12px rgba(243, 156, 18, 0.6);
-    transform: scale(1.1); /* Crece un 10% para resaltar en la interfaz */
+    transform: scale(1.1);
 }
 
-.vs-emblema {
-    font-weight: bold;
-    color: #e74c3c; 
-    font-size: 1.2rem;
-}
+.vs-emblema { font-weight: bold; color: #e74c3c; font-size: 1.2rem; }
