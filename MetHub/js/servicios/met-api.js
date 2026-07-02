@@ -48,5 +48,43 @@ const MetApi = {
             clearTimeout(timerId);
             throw error;
         }
+    },
+
+
+    /**
+     * 1. BUSCAR OBRA POR PALABRA CLAVE
+     * Envía una solicitud al endpoint de búsqueda (/search?q=palabra)
+     * @param {string} query - El texto que el usuario quiere buscar (ej: "sunflower")
+     * @param {string} filters - Filtros adicionales opcionales en formato de texto (ej: "&hasImages=true")
+     */
+
+    async searchObjects(query, filters = '') {
+        // encodeURIComponent se asegura de limpiar el texto por si el usuario escribe espacios o acentos,
+        // evitando que la URL se rompa (por ejemplo, convierte un espacio en %20).
+        const url = `${BASE_URL}/search?q=${encodeURIComponent(query)}${filters}`;
+        
+        // Reutilizamos nuestra función con timeout para hacer la petición de forma segura
+        return await this._fetchWithTimeout(url);
+    },
+
+    /**
+     * 2. OBTENER DETALLES DE UNA OBRA ESPECÍFICA
+     * Envía una solicitud al endpoint de objetos (/objects/ID)
+     * @param {number|string} id - El número de identificación de la obra de arte (ej: 436535)
+     */
+    async getObject(id) {
+        const url = `${BASE_URL}/objects/${id}`;
+        return await this._fetchWithTimeout(url);
+    },
+
+    /**
+     * 3. OBTENER LA LISTA DE DEPARTAMENTOS
+     * Envía una solicitud al endpoint (/departments) para traer las 19 áreas del museo
+     */
+    async getDepartments() {
+        const url = `${BASE_URL}/departments`;
+        return await this._fetchWithTimeout(url);
     }
+
 };
+
