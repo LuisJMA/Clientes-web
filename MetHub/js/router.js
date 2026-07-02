@@ -18,5 +18,22 @@ const Router = {
         '#detail': (id) => renderDetail(id),
         '#departments': () => renderDepartments(),
         '#compare': () => renderCompare()
-    }
+    },
+
+    /**
+     * 2. EL INICIALIZADOR:
+     * Esta función se ejecuta una sola vez cuando la aplicación arranca.
+     * Su trabajo es poner al navegador a escuchar los clics del usuario en el menú.
+     */
+    init() {
+        // Le decimos al navegador: "Cada vez que el 'hash' (#) de la URL cambie,
+        // ejecuta automáticamente nuestra función 'handleRoute'".
+        window.addEventListener('hashchange', () => this.handleRoute());
+        
+        // Ejecutamos 'handleRoute' manualmente la primera vez que se carga el archivo.
+        // ¿Por qué? Porque si el usuario escribe en la barra directamente "methub.com/#explore",
+        // la página debe cargar la pantalla de exploración de inmediato sin esperar a que haga clic en nada.
+        this.handleRoute();
+    },
+
 };
