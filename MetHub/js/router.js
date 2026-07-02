@@ -87,3 +87,44 @@ const Router = {
     }
 
 };
+
+
+// --- 4. FUNCIONES TEMPORALES DE RENDERIZADO ---
+// Estas funciones simulan las pantallas de la app de forma temporal. 
+// Crean un título HTML en el aire y lo meten dentro del contenedor '#app'.
+
+function renderHome() {
+    const app = document.getElementById('app');
+    const h1 = document.createElement('h1');
+    h1.textContent = "Bienvenido a la Página Principal (#home)";
+    app.appendChild(h1);
+}
+
+function renderExplore() {
+    const app = document.getElementById('app');
+    const h1 = document.createElement('h1');
+    h1.textContent = "Buscador y Filtros de Arte (#explore)";
+    app.appendChild(h1);
+}
+
+function renderDetail(id) {
+    const app = document.getElementById('app');
+    const h1 = document.createElement('h1');
+    // Usamos comillas invertidas (backticks) para poder meter la variable 'id' directamente en el texto
+    h1.textContent = `Detalle de la Obra con ID: ${id} (#detail)`;
+    app.appendChild(h1);
+}
+
+function renderDepartments() {
+    const app = document.getElementById('app');
+    const h1 = document.createElement('h1');
+    h1.textContent = "Áreas Curatoriales y Departamentos (#departments)";
+    app.appendChild(h1);
+}
+
+function renderCompare() {
+    const app = document.getElementById('app');
+    const h1 = document.createElement('h1');
+    h1.textContent = "Comparador de Obras Lado a Lado (#compare)";
+    app.appendChild(h1);
+}
