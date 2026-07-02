@@ -36,4 +36,54 @@ const Router = {
         this.handleRoute();
     },
 
+
+
+    /**
+     * 3. EL CONTROLADOR (El cerebro de la navegación):
+     * Esta función analiza la URL actual, limpia la pantalla y decide qué vista pintar.
+     */
+    handleRoute() {
+        // Captura el hash actual (ej: "#explore"). 
+        // Si está vacío (porque el usuario acaba de entrar a la web), por defecto le asignamos '#home'.
+        const hash = window.location.hash || '#home';
+        
+        // Buscamos nuestro contenedor principal (en el HTML).
+        const appContainer = document.getElementById('app');
+        
+        /**
+         * Borramos todo lo que había de la pantalla anterior.
+         */
+        appContainer.textContent = '';
+
+        /**
+         * CASO ESPECIAL (Rutas con ID dinámico):
+         * Si el hash empieza con '#detail/', significa que el usuario quiere ver una obra específica (ej: #detail/436535).
+         * No podemos buscar "#detail/436535" directamente en nuestro diccionario 'routes' porque ese número cambia siempre.
+         */
+        if (hash.startsWith('#detail/')) {
+            // Dividimos el texto usando la barra '/' como separador. 
+            // Si el texto es "#detail/436535", split('/') nos devuelve un arreglo: ["#detail", "436535"].
+            // Guardamos la posición [1], que es justamente el número de ID de la obra.
+            const id = hash.split('/')[1];
+            
+            // Buscamos la ruta '#detail' en nuestro diccionario y la ejecutamos pasándole el ID como argumento.
+            this.routes['#detail'](id);
+            
+            // Cortamos la ejecución de la función aquí con un 'return' para que no intente ejecutar el código de abajo.
+            return;
+        }
+
+        /**
+         * CASO NORMAL:
+         * Si la ruta existe textualmente en nuestro diccionario (ej: '#explore'), ejecutamos su función asociada.
+         */
+        if (this.routes[hash]) {
+            this.routes[hash]();
+        } else {
+            // Si el usuario se pone creativo y escribe una ruta que no existe (ej: '#perrito'), 
+            // el sistema lo rescata y lo redirige automáticamente a la pantalla de Inicio.
+            this.routes['#home']();
+        }
+    }
+
 };
