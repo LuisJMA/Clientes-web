@@ -4,9 +4,12 @@
  * Renderiza la interfaz base del buscador global.
  * Esta función destruye el cascarón antiguo y dibuja el formulario real.
  */
+
+
 function renderExplore() {
     const app = document.getElementById('app');
 
+    console.log("🚀 ¡Sí! El enrutador llamó a renderExplore() con éxito.");
     // 1. Inyectamos el esqueleto HTML del buscador de forma dinámica
     app.innerHTML = `
         <div class="explore-view">
@@ -57,15 +60,78 @@ function renderExplore() {
 }
 
 /**
- * Función interna encargada de coordinar la búsqueda con la API (Cascarón inicial)
+ * Coordina la búsqueda llamando a la API, controla los estados de carga
+ * y gestiona los posibles errores de red o timeouts.
  */
-function executeSearch(query) {
+async function executeSearch(query) {
+    const loader = document.getElementById('search-loader');
     const messageContainer = document.getElementById('search-message');
     const gridContainer = document.getElementById('results-grid');
-    
-    // Limpiamos pantallas anteriores
-    gridContainer.textContent = '';
-    
-    // Mostramos un mensaje temporal antes de conectar la API real
-    messageContainer.innerHTML = `<p>Buscando obras relacionadas con: <strong>"${query}"</strong>...</p>`;
+
+    // 1. PREPARAR LA INTERFAZ (Estado de carga)
+    if (loader) loader.classList.remove('hidden'); // Mostramos el spinner de carga
+    if (messageContainer) messageContainer.textContent = '';  // Limpiamos mensajes anteriores
+    if (gridContainer) gridContainer.textContent = '';     // Vaciamos la cuadrícula de imágenes
+
+    try {
+        // 2. CONSUMIR LA API REAL
+        const data = await MetApi.searchObjects(query);
+
+        // Ocultamos el loader inmediatamente al recibir respuesta
+        if (loader) loader.classList.add('hidden');
+
+        // 3. VALIDAR SI EL MUSEO TIENE RESULTADOS
+        if (!data || data.total === 0 || !data.objectIDs) {
+            if (messageContainer) {
+                messageContainer.innerHTML = `
+                    <p class="info-message">No se encontraron obras de arte para <strong>"${query}"</strong>. ¡Prueba con otro término!</p>
+                `;
+            }
+            return; 
+        }
+
+        // 4. OPTIMIZACIÓN DE RENDIMIENTO
+        // Limitamos el arreglo masivo para procesar solo los primeros 12 IDs.
+        const topIDs = data.objectIDs.slice(0, 12);
+        
+        if (messageContainer) {
+            messageContainer.innerHTML = `
+                <p class="success-message">Se encontraron ${data.total} registros. Cargando una muestra de las primeras ${topIDs.length} obras...</p>
+            `;
+        }
+
+        // 5. ENVIAR A RENDERIZAR LOS ID TEMPORALES
+        fetchAndRenderCards(topIDs);
+
+    } catch (error) {
+        if (loader) loader.classList.add('hidden');
+
+        if (messageContainer) {
+            if (error.name === 'AbortError') {
+                messageContainer.innerHTML = `
+                    <p class="error-message">⚠️ La consulta tardó demasiado. Los servidores del MET están congestionados. Inténtalo de nuevo.</p>
+                `;
+            } else {
+                messageContainer.innerHTML = `
+                    <p class="error-message">❌ Hubo un problema al conectar con el servidor del museo.</p>
+                `;
+            }
+        }
+        console.error("Error en la búsqueda:", error);
+    }
+}
+
+/**
+ * Recibe un lote de IDs y dibuja cajitas temporales en el grid.
+ */
+async function fetchAndRenderCards(ids) {
+    const gridContainer = document.getElementById('results-grid');
+    if (!gridContainer) return;
+
+    ids.forEach(id => {
+        const placeholderCard = document.createElement('div');
+        placeholderCard.className = 'card-placeholder';
+        placeholderCard.textContent = `Cargando datos de la obra ID: ${id}...`;
+        gridContainer.appendChild(placeholderCard);
+    });
 }
