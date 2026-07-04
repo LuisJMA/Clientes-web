@@ -100,12 +100,6 @@ function renderHome() {
     app.appendChild(h1);
 }
 
-function renderExplore() {
-    const app = document.getElementById('app');
-    const h1 = document.createElement('h1');
-    h1.textContent = "Buscador y Filtros de Arte (#explore)";
-    app.appendChild(h1);
-}
 
 function renderDetail(id) {
     const app = document.getElementById('app');
